@@ -1,6 +1,7 @@
 package me.nereo.multi_image_selector.adapter;
 
 import android.content.Context;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,7 +9,12 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.squareup.picasso.Picasso;
+import com.facebook.drawee.backends.pipeline.Fresco;
+import com.facebook.drawee.controller.AbstractDraweeController;
+import com.facebook.drawee.view.SimpleDraweeView;
+import com.facebook.imagepipeline.common.ResizeOptions;
+import com.facebook.imagepipeline.request.ImageRequest;
+import com.facebook.imagepipeline.request.ImageRequestBuilder;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -85,12 +91,17 @@ public class FolderAdapter extends BaseAdapter {
                         getTotalImageSize(), mContext.getResources().getString(R.string.photo_unit)));
                 if(mFolders.size()>0){
                     Folder f = mFolders.get(0);
-                    Picasso.with(mContext)
-                            .load(new File(f.cover.path))
-                            .error(R.drawable.default_error)
-                            .resizeDimen(R.dimen.folder_cover_size, R.dimen.folder_cover_size)
-                            .centerCrop()
-                            .into(holder.cover);
+                    int width = mContext.getResources().getDimensionPixelSize(R.dimen.folder_cover_size);
+                    int height = mContext.getResources().getDimensionPixelSize(R.dimen.folder_cover_size);
+                    ImageRequest request = ImageRequestBuilder.newBuilderWithSource(Uri.parse(f.cover.path))
+                            .setResizeOptions(new ResizeOptions(width, height))
+                            .build();
+                    AbstractDraweeController controller = Fresco.newDraweeControllerBuilder()
+                            .setOldController(holder.cover.getController())
+                            .setImageRequest(request)
+                            .build();
+                    holder.cover.setController(controller);
+                    holder.cover.setImageURI(Uri.fromFile(new File(f.cover.path)));
                 }
             }else {
                 holder.bindData(getItem(i));
@@ -126,13 +137,13 @@ public class FolderAdapter extends BaseAdapter {
     }
 
     class ViewHolder{
-        ImageView cover;
+        SimpleDraweeView cover;
         TextView name;
         TextView path;
         TextView size;
         ImageView indicator;
         ViewHolder(View view){
-            cover = (ImageView)view.findViewById(R.id.cover);
+            cover = (SimpleDraweeView)view.findViewById(R.id.cover);
             name = (TextView) view.findViewById(R.id.name);
             path = (TextView) view.findViewById(R.id.path);
             size = (TextView) view.findViewById(R.id.size);
@@ -151,17 +162,13 @@ public class FolderAdapter extends BaseAdapter {
             }else{
                 size.setText("*"+mContext.getResources().getString(R.string.photo_unit));
             }
-            // 显示图片
-            if (data.cover != null) {
-                Picasso.with(mContext)
-                        .load(new File(data.cover.path))
-                        .placeholder(R.drawable.default_error)
-                        .resizeDimen(R.dimen.folder_cover_size, R.dimen.folder_cover_size)
-                        .centerCrop()
-                        .into(cover);
+            if (data.cover != null){
+                // 显示图片
+                cover.setImageURI(Uri.fromFile(new File(data.cover.path)));
             }else{
                 cover.setImageResource(R.drawable.default_error);
             }
+
         }
     }
 

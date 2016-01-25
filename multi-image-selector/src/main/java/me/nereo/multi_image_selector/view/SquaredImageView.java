@@ -2,10 +2,11 @@ package me.nereo.multi_image_selector.view;
 
 import android.content.Context;
 import android.util.AttributeSet;
-import android.widget.ImageView;
+
+import com.facebook.drawee.view.SimpleDraweeView;
 
 /** An image view which always remains square with respect to its width. */
-class SquaredImageView extends ImageView {
+class SquaredImageView extends SimpleDraweeView {
   public SquaredImageView(Context context) {
     super(context);
   }
