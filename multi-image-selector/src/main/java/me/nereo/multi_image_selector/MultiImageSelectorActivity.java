@@ -139,10 +139,8 @@ public class MultiImageSelectorActivity extends FragmentActivity implements Mult
     @Override
     public void onCameraShot(File imageFile) {
         if(imageFile != null) {
-
             // notify system
             sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.fromFile(imageFile)));
-
             Intent data = new Intent();
             resultList.add(imageFile.getAbsolutePath());
             data.putStringArrayListExtra(EXTRA_RESULT, resultList);
