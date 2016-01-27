@@ -1,5 +1,6 @@
 package me.nereo.multi_image_selector;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -37,6 +38,28 @@ public class MultiImageSelectorActivity extends FragmentActivity implements Mult
     private ArrayList<String> resultList = new ArrayList<>();
     private Button mSubmitButton;
     private int mDefaultCount;
+
+    /**
+     * 简化调用startActivity
+     * @param activity
+     * @param requestCode 同startActivityForResult 中的requestcode
+     * @param isUseCamera 是否显示调用相机拍照
+     * @param maxSelectCount 最大图片选择数量
+     * @param isMultiSelect 是否多选（true 多选，false 单选）
+     * @param defaultSelectList 默认选中的图片
+     */
+    public static void launch(Activity activity, int requestCode, boolean isUseCamera, int maxSelectCount, boolean isMultiSelect, ArrayList<String> defaultSelectList ){
+        Intent intent = new Intent(activity, MultiImageSelectorActivity.class);
+        // 是否显示调用相机拍照
+        intent.putExtra(MultiImageSelectorActivity.EXTRA_SHOW_CAMERA, isUseCamera);
+        // 最大图片选择数量
+        intent.putExtra(MultiImageSelectorActivity.EXTRA_SELECT_COUNT, maxSelectCount);
+        // 设置模式 (支持 单选/MultiImageSelectorActivity.MODE_SINGLE 或者 多选/MultiImageSelectorActivity.MODE_MULTI)
+        intent.putExtra(MultiImageSelectorActivity.EXTRA_SELECT_MODE,isMultiSelect ? MultiImageSelectorActivity.MODE_MULTI : MultiImageSelectorActivity.MODE_SINGLE);
+        // 默认选择图片,回填选项(支持String ArrayList)
+        intent.putStringArrayListExtra(MultiImageSelectorActivity.EXTRA_DEFAULT_SELECTED_LIST, defaultSelectList);
+        activity.startActivityForResult(intent, requestCode);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
