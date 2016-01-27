@@ -1,5 +1,6 @@
 # MultiImageSelector
 Image selector for Android device. Support single choice and multi-choice.
+[![](https://jitpack.io/v/JollyJiang/MultiImageSelector.svg)](https://jitpack.io/#JollyJiang/MultiImageSelector)
 
 [中文文档](README_zh.md)
 
