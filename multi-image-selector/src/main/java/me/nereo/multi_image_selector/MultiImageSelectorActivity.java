@@ -8,8 +8,6 @@ import android.support.v4.app.FragmentActivity;
 import android.view.View;
 import android.widget.Button;
 
-import com.facebook.drawee.backends.pipeline.Fresco;
-
 import java.io.File;
 import java.util.ArrayList;
 
@@ -44,7 +42,6 @@ public class MultiImageSelectorActivity extends FragmentActivity implements Mult
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_default);
-        Fresco.initialize(this);
         Intent intent = getIntent();
         mDefaultCount = intent.getIntExtra(EXTRA_SELECT_COUNT, 9);
         int mode = intent.getIntExtra(EXTRA_SELECT_MODE, MODE_MULTI);

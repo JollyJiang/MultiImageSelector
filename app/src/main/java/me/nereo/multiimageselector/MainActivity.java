@@ -1,10 +1,9 @@
 package me.nereo.multiimageselector;
 
 import android.content.Intent;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -12,8 +11,10 @@ import android.widget.EditText;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
+import com.facebook.drawee.backends.pipeline.Fresco;
+import com.facebook.imagepipeline.core.ImagePipelineConfig;
+
 import java.util.ArrayList;
-import java.util.List;
 
 import me.nereo.multi_image_selector.MultiImageSelectorActivity;
 
@@ -32,6 +33,12 @@ public class MainActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        ImagePipelineConfig config = ImagePipelineConfig.newBuilder(this)
+                .setDownsampleEnabled(true)
+                .build();
+        Fresco.initialize(this, config);
+
 
         mResultText = (TextView) findViewById(R.id.result);
         mChoiceMode = (RadioGroup) findViewById(R.id.choice_mode);
