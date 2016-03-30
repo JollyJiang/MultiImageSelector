@@ -228,15 +228,23 @@ public class ImageGridAdapter extends BaseAdapter {
             File imageFile = new File(data.path);
             if (imageFile.exists()) {
                 // 显示图片
-                ImageRequest request = ImageRequestBuilder.newBuilderWithSource(Uri.parse(data.path))
-                        .setResizeOptions(new ResizeOptions(mGridWidth, mGridWidth))
-                        .build();
-                AbstractDraweeController controller = Fresco.newDraweeControllerBuilder()
-                        .setOldController(image.getController())
-                        .setImageRequest(request)
-                        .build();
-                image.setController(controller);
-                image.setImageURI(Uri.fromFile(imageFile));
+
+                final Uri imageUri = Uri.fromFile(imageFile);
+                if (imageUri != null && !imageUri.equals(image.getTag(R.id.fresco_image_tag))){//如果图片显示过，不再加载图片，防止闪烁
+                    ImageRequest request = ImageRequestBuilder.newBuilderWithSource(Uri.parse(data.path))
+                            .setResizeOptions(new ResizeOptions(mGridWidth, mGridWidth))
+                            .build();
+                    AbstractDraweeController controller = Fresco.newDraweeControllerBuilder()
+                            .setOldController(image.getController())
+                            .setImageRequest(request)
+
+                            .build();
+
+                    image.setController(controller);
+                    image.setImageURI(imageUri);
+                    image.setTag(R.id.fresco_image_tag, imageUri);
+                }
+
             }else{
                 image.setImageResource(R.drawable.default_error);
             }
